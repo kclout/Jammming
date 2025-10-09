@@ -3,7 +3,7 @@ Ready to rock? With Jammming!, you can search for your favorite songs, create pl
 
 This project was created to demonstrate understanding of React and its many features, including use of hooks and components. This project also demonstrates integration of APIs. Users are able to look up Spotify tracks by name, artist, or album, preview tracks, add tracks to a playlist, customize the playlist name, description, and cover, and export the playlist to their connected Spotify account. Note that the Jammming! web app is currently for **demonstrative purposes only**, and Spotify integration and functionality will be added in a later update.
 
-**v0.2.0 UPDATE**
+**v0.2.0 UPDATE 10/9/2025:**
 - Added changes for accessibility
 - Now shows number of tracks in Search Results and Playlist
 - New layout for desktop
