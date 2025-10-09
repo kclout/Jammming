@@ -7,10 +7,10 @@ import { faBars, faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons';
 import Tracklist from '../Tracklist/Tracklist';
 
 function SearchResults(props) {
-  function handleEmptyResults() {
+  function handleEmptyResults() {   // displays message if Search Results are empty
     if(props.isEmpty && props.userSearchResults.length === 0) {
       return (
-        <div className={styles.empty}>
+        <div className={styles["SearchResults-empty"]}>
           <FontAwesomeIcon className={styles.faMagnifyingGlass} icon={faMagnifyingGlass} size="lg" />
           <p>No Results</p>
         </div>
@@ -25,22 +25,20 @@ function SearchResults(props) {
     <div className={styles.SearchResults}>
       <div className={styles["SearchResults-title"]}>
         <FontAwesomeIcon className={styles.faBars} icon={faBars} size="lg" />
-        <h2>Results</h2>
+        <h2>Results ({props.userSearchResults.length})</h2>
       </div>
       <Tracklist
         userSearchResults={props.userSearchResults}
 
         onAdd={props.onAdd}
-        onPlay={props.onPlay}
+        onTrackChange={props.onTrackChange}
 
         isRemoval={false}
         isPlaying={props.isPlaying}
-        isSpinning={props.isSpinning}
         isExistingTrack={props.isExistingTrack}
 
         currentTrack={props.currentTrack}
         addedTracks={props.addedTracks}
-        toggleSpin={props.toggleSpin}
         toggleControl={props.toggleControl}
       />
       {handleEmptyResults()}

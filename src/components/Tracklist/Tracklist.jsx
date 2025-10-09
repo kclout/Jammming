@@ -14,17 +14,15 @@ function Tracklist(props) {
 
           onAdd={props.onAdd}
           onRemove={props.onRemove}
-          onPlay={props.onPlay}
+          onTrackChange={props.onTrackChange}
 
           currentTrack={props.currentTrack}
           
           isRemoval={props.isRemoval}
           isPlaying={props.isPlaying}
-          isSpinning={props.isSpinning}
           isExistingTrack={props.isExistingTrack}       
           
           addedTracks={props.addedTracks}
-          toggleSpin={props.toggleSpin}
           toggleControl={props.toggleControl}
         />
       ))}

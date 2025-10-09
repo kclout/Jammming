@@ -18,7 +18,7 @@ function SearchBar(props) {
   return (
     <div className={styles.SearchBar}>
       <input onChange={handleTermChange} placeholder="Enter A Song, Album, or Artist" />
-      <button onClick={passTerm}><FontAwesomeIcon icon={faMagnifyingGlass} size="lg" /></button>
+      <button onClick={passTerm} title="Search"><FontAwesomeIcon icon={faMagnifyingGlass} size="lg" /></button>
     </div>
   );
 }

@@ -4,11 +4,10 @@ import styles from './Track.module.css';
 import jammmingLogo from '../../assets/jammming_logo.png';
 import record from '../../assets/record.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlus, faMinus, faPlay, faPause, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPlus, faMinus, faCheck, faPlay, faPause, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-function Track(props) {
-    
-    function checkExistingTrack() {
+function Track(props) { 
+    function checkExistingTrack() {     // displays inactive style (checkmark) for tracks in Search Resutls that have already been added
         let result = '';
         props.addedTracks?.forEach((t) => {
             if (props.track.id === t?.id) {
@@ -18,30 +17,25 @@ function Track(props) {
         return result;
     }
 
-    function renderAction() {
+    function renderAction() {      // render add, remove, and checkmark buttons depending on state of track
         if (props.isRemoval) {
-            return <button className={styles['Track-action']} onClick={passTrackToRemove}><FontAwesomeIcon icon={faMinus} size="2xs" /></button>
+            return <button className={styles['Track-action']} onClick={passTrackToRemove} title={`Remove ${props.track.name}`}><FontAwesomeIcon icon={faMinus} size="2xs" /></button>
         }
         else {
-            return <button className={`${styles['Track-action']} ${checkExistingTrack()}`}  onClick={passTrack} title={checkExistingTrack() ? 'Track already in playlist' : ''}><FontAwesomeIcon icon={faPlus} size="2xs" /></button>
+            return <button className={`${styles['Track-action']} ${checkExistingTrack()}`}  onClick={passTrack} title={checkExistingTrack() ? 'Track already in playlist' : `Add ${props.track.name}`}><FontAwesomeIcon icon={checkExistingTrack() ? faCheck : faPlus} size="2xs" /></button>
         }
     }
 
-    function renderControl() {
+    function renderControl() {      // render play, pause, and missing preview buttons depending on state of track
         if(props.isPlaying && props.track.id === props.currentTrack.id) {
-            if(!props.track.preview) {
-                return <button onClick={handleClick} title={props.track.preview ? "" : "No preview available"}><FontAwesomeIcon className={styles['Track-control']} icon={faXmark} size="2xl" /></button>;
-            }
-            else {
-                return <button onClick={handleClick}><FontAwesomeIcon className={styles['Track-control']} icon={faPause} size="lg" /></button>;
-            }
+            return <button onClick={handleClick} title={props.track.preview ? `Pause ${props.track.name}` : "No preview available"}><FontAwesomeIcon className={styles['Track-control']} icon={props.track.preview ? faPause : faXmark} size={props.track.preview ? "lg" : "2xl"} /></button>;
         }
         else {
-            return <button onClick={handleClick} title={props.track.preview ? `Preview ${props.track.name} by ${props.track.artist}` : "No preview available"}><FontAwesomeIcon className={styles['Track-control']} icon={faPlay} size="lg" /></button>;
+            return <button onClick={handleClick} title={props.track.preview ? `Preview ${props.track.name}` : "No preview available"}><FontAwesomeIcon className={styles['Track-control']} icon={faPlay} size="lg" /></button>;
         }
     }
 
-    function spinTrack() {
+    function spinTrack() {      // adds 'spin' class to current track playing if preview exists
         if(props.track.preview && props.isPlaying && props.track.id === props.currentTrack.id) {
             return styles.spin;
         }
@@ -59,9 +53,8 @@ function Track(props) {
     }
 
     function handleClick() {
-        props.onPlay(props.track);
+        props.onTrackChange(props.track);
         props.toggleControl(props.track);
-        props.toggleSpin(props.track);       
     }
 
     return (

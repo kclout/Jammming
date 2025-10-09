@@ -11,7 +11,7 @@ function Copyright(props) {
                 <div className={styles["Copyright-container"]}>
                     <div className={styles["Copyright-title"]}>
                         <h2>Copyright Information</h2>
-                        <button onClick={() => props.setPopUp(false)}><FontAwesomeIcon className={styles.xmark} icon={faXmark} size="lg" /></button>
+                        <button onClick={() => props.setPopUp(false)} title="Close" aria-label="Close"><FontAwesomeIcon className={styles.faXmark} icon={faXmark} size="lg" /></button>
                     </div>
                     <ul>
                         <li><p><a href="https://unsplash.com/photos/a-colorful-sound-wave-on-a-black-background--TfwQjOWEp8?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" target="_blank" title="Soundwave">Soundwave photo</a> by <a href="https://unsplash.com/@jumpingjax?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash" target="_blank" title="Jumping Jax">Jumping Jax</a> on <a href="https://www.unsplash.com" target="_blank" title="Unsplash">Unsplash.</a></p></li>

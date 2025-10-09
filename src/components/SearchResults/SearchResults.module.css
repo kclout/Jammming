@@ -1,12 +1,11 @@
 .SearchResults {
     display: flex;
     flex-direction: column;
-    width: 40%;
-    height: 100%;
+    width: 60%;
+    height: 95%;
     max-height: 1000px;
-    padding: 1rem;
-    border: 1px solid rgb(30, 215, 96);
-    box-shadow: 0px 0px 20px rgb(30, 215, 96);
+    padding: 1rem 2rem 1rem 1rem;
+    border-right: 1.5px solid rgb(30, 215, 96);
     overflow-y: auto;
 }
 
@@ -22,20 +21,21 @@
     color: rgb(30, 215, 96);
 }
 
-.empty {
+.SearchResults-empty {
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 1rem;
+    margin: 10% auto;
 }
 
-.empty p {
+.SearchResults-empty p {
     color: rgb(118, 118, 118);
 }
 
 .faMagnifyingGlass {
-    width: 7rem;
-    height: 7rem;
+    width: 10rem;
+    height: 10rem;
     padding-bottom: 0.75rem;
     color: rgb(118, 118, 118, 0.3);
 }
@@ -89,6 +89,9 @@
 @media only screen and (max-width: 1020px) {
     .SearchResults {
         width: 75%;
-        margin-bottom: 7%;
+        padding: 2rem;
+        margin-bottom: 15%;
+        border: 1px solid rgb(30, 215, 96);
+        box-shadow: 0px 0px 20px rgb(30, 215, 96);
     }
 }

@@ -27,6 +27,10 @@ header {
   padding: 1rem 1%;
 }
 
+header a {
+  text-decoration: none;
+}
+
 header img {
   width: 3.5rem;
   height: 3.5rem;
@@ -106,14 +110,19 @@ button:hover {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
+  padding: 1rem;
   width: 80%;
-  margin: 3% 5%;
+  max-width: 1900px;
+  height: 30rem;
+  margin: 5%;
+  border: 1px solid rgb(30, 215, 96);
+  box-shadow: 0px 0px 20px rgb(30, 215, 96);
 }
 
 footer {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   margin: 2% auto;
 }
 
@@ -165,7 +174,11 @@ footer a:hover {
     flex-direction: column;
     align-items: center;
     width: 100%;
+    height: unset;
+    padding: 0;
     margin-top: 7%;
+    border: unset;
+    box-shadow: unset;
   }
 
   .SearchBar-container p {
@@ -179,7 +192,7 @@ footer a:hover {
     width: 2.75rem;
     height: 2.75rem;
   }
-  
+
   h1 {
     font-size: 1.5em;
   }
