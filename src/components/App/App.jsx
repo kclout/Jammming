@@ -12,7 +12,7 @@ import Playlist from '../Playlist/Playlist';
 import PopUp from '../PopUp/PopUp';
 import Copyright from '../Copyright/Copyright';
 import Settings from '../Settings/Settings';
-import { Spotify } from '../../util/Spotify/spotify';
+import { Spotify } from '../../util/Spotify/Spotify';
 
 function App() {
   // tracks
