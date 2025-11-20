@@ -1,6 +1,6 @@
 let accessToken = '';
 const clientID = "4c3e6782558d475da3bda5996575ba4b";
-const redirectUrl = "http://127.0.0.1:5173";
+const redirectUrl = "https://kclout-jammming.netlify.app";
 
 function generateRandomString(length = 128) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~';
