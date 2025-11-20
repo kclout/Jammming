@@ -1,0 +1,95 @@
+.PopUp-background {
+    display: flex;
+    position: fixed;
+    z-index: 4;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+.PopUp-container {
+    background-color: rgb(20, 21, 26);
+    border: 1px solid rgb(30, 215, 96);
+    box-shadow: 0px 0px 20px rgb(30, 215, 96);
+}
+
+.lg {
+    width: 60%;
+    height: 60%;
+}
+
+.med {
+    width: 45%;
+    height: 45%;
+}
+
+.sm {
+    width: 35%;
+    height: 35%;    
+}
+
+.PopUp-title {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid rgb(30, 215, 96);
+}
+
+.PopUp-title h2 {
+    margin: 0.5rem 1rem;
+}
+
+.PopUp-title button {
+    padding: 0.5rem;
+    border-radius: 0;
+}
+
+.PopUp-container h3 {
+    color: rgb(255, 255, 255);
+}
+
+.PopUp-container ul {
+    list-style: none;
+    padding: 2rem;
+}
+
+.PopUp-container li {
+    margin-bottom: 1rem;
+}
+
+.PopUp-container a {
+    text-decoration: none;
+    color: rgb(30, 215, 96);
+}
+
+.PopUp-container a:hover {
+    text-decoration: underline;
+    color: rgb(255, 255, 255);
+}
+
+.PopUp-content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+@media only screen and (max-width: 500px) {
+    .lg {
+        width: 70%;
+        height: 70%;
+    }
+
+    .med {
+        width: 55%;
+        height: 55%;
+    }
+
+    .sm {
+        width: 40%;
+        height: 40%;    
+    }   
+}
+

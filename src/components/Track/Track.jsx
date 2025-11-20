@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styles from './Track.module.css';
 import jammmingLogo from '../../assets/jammming_logo.png';
 import record from '../../assets/record.png';
@@ -36,12 +34,9 @@ function Track(props) {
     }
 
     function spinTrack() {      // adds 'spin' class to current track playing if preview exists
-        if(props.track.preview && props.isPlaying && props.track.id === props.currentTrack.id) {
-            return styles.spin;
-        }
-        else {
-            return '';
-        }
+        return (props.track.preview && props.isPlaying && props.track.id === props.currentTrack.id) ? (
+            styles.spin
+        ) : "";
     }
 
     function passTrack() {

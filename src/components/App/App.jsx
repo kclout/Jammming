@@ -1,72 +1,44 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ReactDOM from 'react-dom';
 
 import styles from './App.module.css';
 import jammmingLogo from '../../assets/jammming_logo.png';
 import githubLogo from '../../assets/github.png';
-import placeholderSong from '../../assets/embrace-364091.mp3';
-import placeholderSong2 from '../../assets/the-last-point-beat-electronic-digital-394291.mp3';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCopyright } from '@fortawesome/free-regular-svg-icons';
 
 import SearchBar from '../SearchBar/SearchBar';
 import SearchResults from '../SearchResults/SearchResults';
 import Playlist from '../Playlist/Playlist';
+import PopUp from '../PopUp/PopUp';
 import Copyright from '../Copyright/Copyright';
+import Settings from '../Settings/Settings';
+import { Spotify } from '../../util/Spotify/spotify';
 
 function App() {
-  const [searchResults, setSearchResults] = useState([
-    {
-      name: "Butterfly",
-      artist: "LOONA",
-      album: "[XX]",
-      id: 1,
-      cover: jammmingLogo,
-      preview: placeholderSong,
-    },
-    {
-      name: "prfct",
-      artist: "Sabrina Carpenter",
-      album: "Singular Act I",
-      id: 2,
-      cover: jammmingLogo,
-      preview: placeholderSong2,
-    },
-    {
-      name: "Go Gina",
-      artist: "SZA",
-      album: "Ctrl",
-      id: 3,
-      cover: jammmingLogo,
-      preview: placeholderSong,
-    },
-  ]);
-  const [playlistName, setPlaylistName] = useState("New Playlist");
-  const [playlistDesc, setPlaylistDesc] = useState(null);
-  const [playlistTracks, setPlaylistTracks] = useState([
-    {
-      name: "Butterfly",
-      artist: "LOONA",
-      album: "[XX]",
-      id: 1,
-      cover: jammmingLogo,
-      preview: placeholderSong,
-    },
-    {
-      name: "prfct",
-      artist: "Sabrina Carpenter",
-      album: "Singular Act I",
-      id: 2,
-      cover: jammmingLogo,
-      preview: placeholderSong2,
-    }
-  ]);
+  // tracks
+  const [searchResults, setSearchResults] = useState([]);
+
+  const [playlistName, setPlaylistName] = useState("");
+  const [playlistDesc, setPlaylistDesc] = useState("");
+  const [playlistCover, setPlaylistCover] = useState(jammmingLogo);
+  const [playlistCoverPrev, setPlaylistCoverPrev] = useState(jammmingLogo);
+  const [playlistId, setPlaylistId] = useState(null);
+  const [playlistTracks, setPlaylistTracks] = useState([]);
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [isExistingTrack, setIsExistingTrack] = useState(false);
   const [isEmpty, setIsEmpty] = useState(true);
   const [currentTrack, setCurrentTrack] = useState(null);
   const [addedTracks, setAddedTracks] = useState([]);
-  const [popUp, setPopUp] = useState(false);
+
+  // settings
+  const [resetOnSave, setResetOnSave] = useState(false);
+
+  // misc
+  const [userName, setUserName] = useState(null);
+  const [popUp, setPopUp] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [loadId, setLoadId] = useState(null);
   const audioRef = useRef(new Audio(null));
 
   useEffect(() => {   // checks for empty playlist or results
@@ -93,6 +65,50 @@ function App() {
       setIsPlaying(true);
     }
   }, [currentTrack?.id]);
+
+  useEffect(() => {   // gets user display name after log in, checks access token
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get("code");
+    const error = urlParams.get("error");
+
+    async function getUser() {
+      if(code) {
+        updateLoading(true, "login");
+        const newUserName = await Spotify.logIn();
+
+        if(newUserName) {
+          setUserName(newUserName);
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      }
+    }
+
+    if(error === 'access_denied'){
+      console.error("Error during authentication:", error);
+      window.location.replace("/");
+    }
+    getUser()
+    .then(() => {
+      setTimeout(() => updateLoading(false, null), 1000);
+    });
+  }, []);
+
+  useEffect(() => {     // change cursor to wait when loading elements
+    document.body.style.cursor = loading ? "wait" : "default";
+  }, [loading]);
+
+  function updateLoading(status, id) {    // trigger loading on/off for selected function
+    setLoadId(id);
+    setLoading(status);
+  }
+
+  async function search(term) {
+    updateLoading(true, "search");
+    Spotify.search(term).then(result => {
+      setSearchResults(result);
+      updateLoading(false, null);
+    });
+  }
 
   function addTrack(track) {    // add track to playlist if not already in it
     const existingTrack = playlistTracks.find((t) => t.id === track.id);
@@ -128,18 +144,95 @@ function App() {
     setPlaylistDesc(desc);
   }
 
-  function savePlaylist() {
-    const trackURIs = playlistTracks.map((t) => t.uri);
-
+  function updatePlaylistCoverPrev(cover) {
+    setPlaylistCoverPrev(cover);
   }
 
-  function search(term) {
-    console.log(term);
+  function updatePlaylistCover(cover) {
+    setPlaylistCover(cover);
+  }
+
+  function resetPlaylist() {    // reset playlist creation space
+    setPlaylistName("");
+    setPlaylistDesc("");
+    setPlaylistCoverPrev(jammmingLogo);
+    setPlaylistCover(jammmingLogo);
+    setPlaylistTracks([]);
+  }
+
+  async function savePlaylist() {
+    const trackURIs = playlistTracks.map((t) => t.uri);
+    const newPlaylistId = await Spotify.savePlaylist(playlistName, playlistDesc, playlistCover, trackURIs);
+
+    updatePlaylistName(playlistName);
+    updatePlaylistDesc(playlistDesc);
+    updatePlaylistCover(playlistCover);
+    setPlaylistId(newPlaylistId);
+
+    return newPlaylistId;
+  }
+
+  async function logIn() {
+    Spotify.logIn().then(newUserName => setUserName(newUserName));
+  }
+
+  async function logOut() {
+    Spotify.logOut()
+      .then(() => {
+        setUserName(null);
+        setPopUp({
+          title: "Logout Sucessful!",
+          comp: null,
+          props: null,
+          message: <div className={styles["logout-popup-container"]}><img src={jammmingLogo} /><p>Come back soon!</p></div>,
+          size: "sm",
+        });
+        setTimeout(() => {
+          window.location.reload();
+          setPopUp(null);
+        }, 2000);
+      });
+  }
+
+  function displayLogin() {
+    const load = loading && loadId === "login";
+    if(load) {
+      return (
+        <div className={styles.loading}>
+          <div className={styles.loader}></div>
+          <p>Loading...</p>
+        </div>
+      );
+    }
+    else {
+      return (!userName) ? (
+        <button className={styles.login} onClick={() => logIn()} title="Log in">LOG IN</button>
+      ) : (
+        <div className={styles["login-container"]}>
+          <p>Hi, <span className={styles.bold}>{userName}</span>!</p>
+          <button className={styles.logout} onClick={() => logOut()} title="Log out">Log out</button>
+        </div>
+      )
+    }
+  }
+
+  function settingsPopUp() {    // open settings
+    setPopUp({
+      title: "Settings",
+      comp: Settings,
+      props: {resetToggle: updateResetOnSave, reset: resetOnSave},
+      message: null,
+      size: "lg",
+    });
+  }
+
+  function updateResetOnSave(reset) {
+    setResetOnSave(reset);
   }
 
   return (
     <div>
-        <Copyright
+        <PopUp
           popUp={popUp}
           setPopUp={setPopUp}
         />
@@ -150,7 +243,7 @@ function App() {
             <h1 aria-label="Jammming!"><span aria-hidden>JA</span><span className={styles.highlight} aria-hidden>MMM</span><span aria-hidden>ING!</span></h1>     
           </div>
         </a>
-        <button className={styles.login}>LOG IN</button>
+        {displayLogin()}
       </header>
       <div className={styles.App}>
         <div className={styles["SearchBar-container"]}>
@@ -163,6 +256,9 @@ function App() {
         <div className={styles["App-playlist"]}>
           <SearchResults
             userSearchResults={searchResults}
+            updateLoading={updateLoading}
+            loading={loading}
+            loadId={loadId}
 
             onAdd={addTrack}
             onTrackChange={updateTrack}
@@ -176,14 +272,24 @@ function App() {
             toggleControl={toggleControl}
           />
           <Playlist 
+            updateLoading={updateLoading}
+            loading={loading}
+            loadId={loadId}
+
             playlistName={playlistName}
             playlistDesc={playlistDesc}
+            playlistCover={playlistCover}
+            playlistCoverPrev={playlistCoverPrev}
+            playlistId={playlistId}
             playlistTracks={playlistTracks}
 
             onNameChange={updatePlaylistName}
             onDescChange={updatePlaylistDesc}
+            onCoverChange={updatePlaylistCover}
+            onCoverPrevChange={updatePlaylistCoverPrev}
             onRemove={removeTrack}
             onTrackChange={updateTrack}
+            onReset={resetPlaylist}
             onSave={savePlaylist}
 
             isPlaying={isPlaying}
@@ -191,12 +297,17 @@ function App() {
 
             currentTrack={currentTrack}
             toggleControl={toggleControl}
+            
+            setPopUp={setPopUp}
+            settings={settingsPopUp}
+            updateResetOnSave={updateResetOnSave}
+            resetOnSave={resetOnSave}
           />
         </div>
       </div>
       <footer>
-        <div className={styles["Footer-container"]}><img src={githubLogo} /><p><a href="https://github.com/kclout/Jammming" target="_blank" title="v0.1.0">v0.2.0</a> by <a href="https://kclout.github.io" target="_blank" title="kclout">kclout</a></p></div>
-        <button className={styles.faCopyright} onClick={() => setPopUp(true)} title="Copyright"><FontAwesomeIcon icon={faCopyright} size="xl" /></button>
+        <div className={styles["Footer-container"]}><img src={githubLogo} /><p><a href="https://github.com/kclout/Jammming" target="_blank" title="v1.0.0">v1.0.0</a> by <a href="https://kclout.github.io" target="_blank" title="kclout">kclout</a></p></div>
+        <button className={styles.faCopyright} onClick={() => setPopUp({ title: "Copyright Information", comp: Copyright, props: null, message: null, size: "lg"})} title="Copyright"><FontAwesomeIcon icon={faCopyright} size="xl" /></button>
       </footer>
     </div>
   );

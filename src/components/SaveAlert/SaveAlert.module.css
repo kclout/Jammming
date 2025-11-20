@@ -1,0 +1,44 @@
+.SaveAlert {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 2rem;
+}
+
+.SaveAlert-cover {
+    object-fit: cover;
+    width: 12rem;
+    aspect-ratio: 1 / 1;
+    margin-bottom: 1rem;
+}
+
+.SaveAlert-name {
+    margin-bottom: 2rem;
+}
+
+#SaveAlert-link {
+  font-family: Orbitron, monospace;
+  font-weight: bold;
+  letter-spacing: 2px;
+  padding: 0.5rem 1rem;
+  color: unset;
+  background-color: rgb(30, 215, 96);
+  border: 1px solid transparent;
+  border-radius: 100px;
+}
+
+#SaveAlert-link:hover {
+  cursor: pointer;
+  text-decoration: none;
+  color: rgb(30, 215, 96);
+  background-color: rgb(20, 21, 26);
+  border: 1px solid rgb(30, 215, 96);
+}
+
+@media only screen and (max-width: 500px) {
+    #SaveAlert-link {
+        font-size: 0.75em;
+        padding: 0.5rem 0.6rem;
+    }
+}
